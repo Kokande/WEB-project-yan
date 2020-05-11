@@ -1,4 +1,4 @@
 flask
 sqlalchemy
 flask-wtf
-flask-ngrock
+flask_ngrok
