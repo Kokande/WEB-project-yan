@@ -2,3 +2,5 @@ flask
 sqlalchemy
 flask-wtf
 flask_ngrok
+flask-login
+wtforms

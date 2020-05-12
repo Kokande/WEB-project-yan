@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1 style="margin-left:10px; color: red;"><i>Регистрация</i></h1>
+<form action="" method="post">
+    {{ form.hidden_tag() }}
+    {{ form.csrf_token }}
+    <p class="form-unit">
+        {{ form.nick.label }}<br>
+        {{ form.nick(class="form-control", type="name") }}<br>
+        {% for error in form.nick.errors %}
+            <p class="alert alert-danger" role="alert">
+                {{ error }}
+            </p>
+        {% endfor %}
+    </p>
+    <p class="form-unit">
+        {{ form.email.label }}<br>
+        {{ form.email(class="form-control", type="email") }}<br>
+        {% for error in form.email.errors %}
+            <p class="alert alert-danger" role="alert">
+                {{ error }}
+            </p>
+        {% endfor %}
+    </p>
+    <p class="form-unit">
+        {{ form.password.label }}<br>
+        {{ form.password(class="form-control", type="password") }}<br>
+        {% for error in form.password.errors %}
+            <p class="alert alert-danger" role="alert">
+                {{ error }}
+            </p>
+        {% endfor %}
+    </p>
+    <p class="form-unit" style="margin-bottom: 30px;">
+        {{ form.password2.label }}<br>
+        {{ form.password2(class="form-control", type="password") }}
+        <small><i>Постарайтесь выбрать пароль отличный от пароля
+            аккаунта Warframe в целях своей безопасности</i></small>
+        {% for error in form.password2.errors %}
+            <p class="alert alert-danger" role="alert">
+                {{ error }}
+            </p>
+        {% endfor %}
+    </p>
+    <p class="form-unit">
+        {{ form.name.label }}<br>
+        {{ form.name(class="form-control") }}<br>
+        {% for error in form.name.errors %}
+            <p class="alert alert-danger" role="alert">
+                {{ error }}
+            </p>
+        {% endfor %}
+    </p>
+    <p class="form-unit">
+        {{ form.rank.label }}<br>
+        {{ form.rank(class="form-control") }}<br>
+        {% for error in form.rank.errors %}
+            <p class="alert alert-danger" role="alert">
+                {{ error }}
+            </p>
+        {% endfor %}
+    </p>
+    <p class="form-unit">{{ form.submit(type="submit", class="btn btn btn-outline-secondary") }}</p>
+    {{message}}
+</form>
+{% endblock %}
