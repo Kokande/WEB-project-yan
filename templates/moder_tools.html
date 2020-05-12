@@ -5,6 +5,11 @@
         <a class="button btn btn btn-outline-secondary" href="/moder_tools/add_item">Добавить элемент арсенала</a>
         <a class="button btn btn btn-outline-secondary" href="/moder_tools/add_method">Добавить способ получения</a>
     </div>
+    {% if message == "Успешно зарегистрировано!" %}
+        <div class="alert alert-success" role="alert">{{ message }}</div>
+    {% elif message %}
+        <div class="alert alert-danger" role="alert">{{ message }}</div>
+    {% endif %}
     {% block tools %}
     {% endblock %}
 {% endblock %}

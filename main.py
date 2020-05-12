@@ -7,6 +7,8 @@ from wtforms.fields.html5 import EmailField
 from wtforms.validators import DataRequired
 from data import db_session
 from data.user import User
+from data.arsenal import Arsenal
+from data.obtaining import ObtainingMethod
 
 
 app = Flask(__name__)
@@ -34,6 +36,20 @@ def moderator_page_item():
     if not current_user.is_authenticated and not current_user.moderator:
         return redirect('/')
     form = AddItemForm()
+    if form.validate_on_submit():
+        session = db_session.create_session()
+        if session.query(Arsenal).filter(Arsenal.name == form.name.data).first():
+            return render_template('moder_item.html', title='Модерация', form=form,
+                                   message="Предмет уже зарегестрирован")
+        item = Arsenal()
+        item.name = form.name.data
+        item.wtype = form.wtype.data
+        item.obtaining = form.obtaining.data
+        session.add(item)
+        session.commit()
+        form.name.data = ''
+        return render_template('moder_item.html', title='Модерация',
+                               form=form, message="Успешно зарегистрировано!")
     return render_template('moder_item.html', title='Модерация', form=form)
 
 
@@ -42,6 +58,20 @@ def moderator_page_method():
     if not current_user.is_authenticated and not current_user.moderator:
         return redirect('/')
     form = AddMethodForm()
+    if form.validate_on_submit():
+        session = db_session.create_session()
+        if session.query(ObtainingMethod).filter(ObtainingMethod.method ==
+                                                 form.name.data).first():
+            return render_template('moder_method.html', title='Модерация', form=form,
+                                   message="Способ уже зарегестрирован")
+        item = ObtainingMethod()
+        item.method = form.name.data
+        item.mtype = form.mtype.data
+        session.add(item)
+        session.commit()
+        form.name.data = ''
+        return render_template('moder_method.html', title='Модерация',
+                               form=form, message="Успешно зарегистрировано!")
     return render_template('moder_method.html', title='Модерация', form=form)
 
 

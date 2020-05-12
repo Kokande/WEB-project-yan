@@ -25,7 +25,7 @@
             {% endif %}
     </nav>
     <header>
-        <h1 class="top">Mastery Rank Master</h1>
+        <a href="/"><h1 class="top">Mastery Rank Master</h1></a>
     </header>
     <main class="pageContentWrapper">
         {% block content %}
@@ -33,7 +33,7 @@
     </main>
     <footer>
         {% if current_user.moderator %}
-            <a class="button btn btn btn-outline-secondary"
+            <a class="button btn btn-outline-secondary" style="margin: 10px;"
                href="/moder_tools">Добавить предметы в БД</a>
         {% endif %}
         <p class="credits">Web-project by Kokande(Fairushin Vyacheslav)</p>
