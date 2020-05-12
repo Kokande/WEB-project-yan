@@ -22,6 +22,36 @@ def load_user(user_id):
     return session.query(User).get(user_id)
 
 
+@app.route('/moder_tools')
+def moderator_page():
+    if not current_user.is_authenticated and not current_user.moderator:
+        return redirect('/')
+    return render_template('moder_tools.html', title='Модерация')
+
+
+@app.route('/moder_tools/add_item', methods=['GET', 'POST'])
+def moderator_page_item():
+    if not current_user.is_authenticated and not current_user.moderator:
+        return redirect('/')
+    form = AddItemForm()
+    return render_template('moder_item.html', title='Модерация', form=form)
+
+
+@app.route('/moder_tools/add_method', methods=['GET', 'POST'])
+def moderator_page_method():
+    if not current_user.is_authenticated and not current_user.moderator:
+        return redirect('/')
+    form = AddMethodForm()
+    return render_template('moder_method.html', title='Модерация', form=form)
+
+
+@app.route('/redact_arsenal', methods=['GET', 'POST'])
+def load_redactor():
+    if not current_user.is_authenticated:
+        return redirect('/')
+    return render_template('redact_arsenal.html', title='Редактор')
+
+
 @app.route('/logout')
 @login_required
 def logout():
@@ -46,13 +76,38 @@ def login():
 
 @app.route("/")
 def index():
-    return render_template("main.html", title="Welcome!")
+    owned = None
+    if current_user.is_authenticated:
+        session = db_session.create_session()
+        owned = [int(i) for i in
+                 session.query(User).filter(User.id == current_user.id).first().owned.split()]
+    return render_template("main.html", title="Welcome!", owned=owned)
 
 
 @app.route("/register", methods=['GET', 'POST'])
 def register():
     form = RegisterForm()
-    return render_template("register.html", form=form)
+    if form.validate_on_submit():
+        if form.password.data != form.password2.data:
+            return render_template('register.html', title='Регистрация',
+                                   form=form,
+                                   message="Пароли не совпадают")
+        session = db_session.create_session()
+        if session.query(User).filter(User.email == form.email.data).first():
+            return render_template('register.html', title='Регистрация',
+                                   form=form,
+                                   message="Такой пользователь уже есть")
+        user = User()
+        user.rank = form.rank.data
+        user.name = form.name.data
+        user.email = form.email.data
+        user.nick = form.nick.data
+        user.set_password(form.password.data)
+        user.owned = ''
+        session.add(user)
+        session.commit()
+        return redirect('/login')
+    return render_template("register.html", form=form, title='Регистрация')
 
 
 class LoginForm(FlaskForm):
@@ -72,5 +127,19 @@ class RegisterForm(FlaskForm):
     submit = SubmitField('Зарегистрироваться')
 
 
+class AddItemForm(FlaskForm):
+    wtype = StringField('Тип элемента', validators=[DataRequired()])
+    name = StringField('Название элемента', validators=[DataRequired()])
+    obtaining = StringField('Способ получения(id)', validators=[DataRequired()])
+    submit = SubmitField('Зарегистрировать элемент арсенала')
+
+
+class AddMethodForm(FlaskForm):
+    mtype = StringField('Тип элемента', validators=[DataRequired()])
+    name = StringField('Название элемента', validators=[DataRequired()])
+    submit = SubmitField('Зарегистрировать способ получения')
+
+
 if __name__ == '__main__':
+    db_session.global_init("db/profiles.sqlite")
     app.run()

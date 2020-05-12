@@ -1,0 +1,27 @@
+{% extends 'moder_tools.html' %}
+
+{% block tools %}
+    <h1 class="top-text">Регистрация способа получения</h1>
+    <form action="" method="post" style="margin-left: 30px;">
+        {{ form.hidden_tag() }}
+        <p class="form-unit">
+            {{ form.mtype.label }}<br>
+            {{ form.mtype(class="form-control") }}<br>
+            {% for error in form.mtype.errors %}
+                <div class="alert alert-danger" role="alert">
+                    {{ error }}
+                </div>
+            {% endfor %}
+        </p>
+        <p class="form-unit">
+            {{ form.name.label }}<br>
+            {{ form.name(class="form-control", type="name") }}<br>
+            {% for error in form.name.errors %}
+                <div class="alert alert-danger" role="alert">
+                    {{ error }}
+                </div>
+            {% endfor %}
+        </p>
+        <p class="form-unit">{{ form.submit(type="submit", class="btn btn-outline-secondary") }}</p>
+    </form>
+{% endblock %}

@@ -4,3 +4,4 @@ flask-wtf
 flask_ngrok
 flask-login
 wtforms
+werkzeug

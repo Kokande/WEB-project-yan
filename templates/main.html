@@ -1,6 +1,21 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<h1 class="top-text">Добро пожаловать на сайт! Пожалуйста,
-    зарегистрируйтесь, чтобы делиться результатом с другими тенно.</h1>
+    {% if current_user.is_authenticated %}
+        <h1 class="top-text">{{ current_user.nick }}({{ current_user.name }})</h1>
+        <div>
+            {% if not owned %}
+                <p style="margin-left:20px;">Ещё не отметили снаряжение? Вы можете сделать это <a href="/redact_arsenal">прямо сейчас!</a></p>
+            {% else %}
+                <ul>
+                    {% for item in arsenal %}
+                        <li>item.name</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        </div>
+    {% else %}
+        <h1 class="top-text">Добро пожаловать на сайт! Пожалуйста,
+            зарегистрируйтесь, чтобы делиться результатом с другими тенно.</h1>
+    {% endif %}
 {% endblock %}

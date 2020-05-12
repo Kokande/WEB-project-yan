@@ -13,22 +13,29 @@
 <body>
     <nav class="top-button">
         {% if current_user.is_authenticated %}
-                <a href="/logout">{{ current_user.name }}</a>
+                <a class="button btn btn btn-outline-secondary"
+                   href="/logout" style="margin-left: 90%;">{{ current_user.nick }}</a>
             {% else %}
                 <p>
-                    <a class="button btn btn btn-outline-secondary" style="margin-left: 75%;" href="/register">Зарегистрироваться</a>
-                    <a class="button btn btn btn-outline-secondary" href="/login">Войти</a>
+                    <a class="button btn btn btn-outline-secondary"
+                       style="margin-left: 75%;" href="/register">Зарегистрироваться</a>
+                    <a class="button btn btn btn-outline-secondary"
+                       href="/login">Войти</a>
                 </p>
             {% endif %}
     </nav>
     <header>
-        <h1 class="top">Master Rank Master</h1>
+        <h1 class="top">Mastery Rank Master</h1>
     </header>
     <main class="pageContentWrapper">
         {% block content %}
         {% endblock %}
     </main>
     <footer>
+        {% if current_user.moderator %}
+            <a class="button btn btn btn-outline-secondary"
+               href="/moder_tools">Добавить предметы в БД</a>
+        {% endif %}
         <p class="credits">Web-project by Kokande(Fairushin Vyacheslav)</p>
     </footer>
 </body>

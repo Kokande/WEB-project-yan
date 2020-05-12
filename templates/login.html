@@ -2,6 +2,9 @@
 
 {% block content %}
     <h1 style="color: green; margin-left:40px;">Авторизация</h1>
+    {% if message %}
+        <div class="alert alert-danger" role="alert">{{ message }}</div>
+    {% endif %}
     <form action="" method="post" style="margin-left: 30px;">
         {{ form.hidden_tag() }}
         <p>
@@ -23,7 +26,6 @@
             {% endfor %}
         </p>
         <p>{{ form.remember_me() }} {{ form.remember_me.label }}</p>
-        <p>{{ form.submit(type="submit", class="btn btn btn-outline-secondary") }}</p>
-        <div>{{ message }}</div>
+        <p>{{ form.submit(type="submit", class="btn btn-outline-secondary") }}</p>
     </form>
 {% endblock %}
