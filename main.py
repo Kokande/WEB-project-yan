@@ -26,14 +26,14 @@ def load_user(user_id):
 
 @app.route('/moder_tools')
 def moderator_page():
-    if not current_user.is_authenticated and not current_user.moderator:
+    if not current_user.is_authenticated or not current_user.moderator:
         return redirect('/')
     return render_template('moder_tools.html', title='Модерация')
 
 
 @app.route('/moder_tools/add_item', methods=['GET', 'POST'])
 def moderator_page_item():
-    if not current_user.is_authenticated and not current_user.moderator:
+    if not current_user.is_authenticated or not current_user.moderator:
         return redirect('/')
     form = AddItemForm()
     if form.validate_on_submit():
@@ -55,7 +55,7 @@ def moderator_page_item():
 
 @app.route('/moder_tools/add_method', methods=['GET', 'POST'])
 def moderator_page_method():
-    if not current_user.is_authenticated and not current_user.moderator:
+    if not current_user.is_authenticated or not current_user.moderator:
         return redirect('/')
     form = AddMethodForm()
     if form.validate_on_submit():
@@ -79,7 +79,27 @@ def moderator_page_method():
 def load_redactor():
     if not current_user.is_authenticated:
         return redirect('/')
-    return render_template('redact_arsenal.html', title='Редактор')
+    session = db_session.create_session()
+    not_achieved = session.query(
+        Arsenal
+                                 ).filter(
+        Arsenal.id.notin_(
+            [int(i) for i in session.query(
+                User
+            ).filter(User.nick == current_user.nick).first().owned.split()]
+        )).all()
+    not_achieved = [i.name for i in not_achieved]
+    return render_template('redact_arsenal.html', title='Редактор', arsenal=not_achieved)
+
+
+@app.route('/redact_arsenal/<item>')
+def get_item(item):
+    session = db_session.create_session()
+    ars = session.query(Arsenal).filter(Arsenal.name == item).first()
+    user = session.query(User).filter(User.nick == current_user.nick).first()
+    user.owned = ' '.join(user.owned.split() + [str(ars.id)])
+    session.commit()
+    return redirect('/redact_arsenal')
 
 
 @app.route('/logout')
@@ -111,6 +131,7 @@ def index():
         session = db_session.create_session()
         owned = [int(i) for i in
                  session.query(User).filter(User.id == current_user.id).first().owned.split()]
+        owned = [session.query(Arsenal).filter(Arsenal.id == int(i)).first().name for i in owned]
     return render_template("main.html", title="Welcome!", owned=owned)
 
 

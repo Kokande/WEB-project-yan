@@ -8,9 +8,10 @@
                 <p style="margin-left:20px;">Ещё не отметили снаряжение? Вы можете сделать это <a href="/redact_arsenal">прямо сейчас!</a></p>
             {% else %}
                 <ul>
-                    {% for item in arsenal %}
-                        <li>item.name</li>
+                    {% for item in owned %}
+                        <li>{{ item }}</li>
                     {% endfor %}
+                    <li><a href="/redact_arsenal">...пополнить.</a></li>
                 </ul>
             {% endif %}
         </div>

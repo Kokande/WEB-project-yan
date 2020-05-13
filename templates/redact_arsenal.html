@@ -2,4 +2,7 @@
 
 {% block content %}
     <h1 class="top-text">Редактируйте Арсенал!</h1>
+    {% for item in arsenal %}
+        <a class="button btn btn-outline-secondary" href="{{ '/redact_arsenal/%s'%item }}">{{ item }}</a>
+    {% endfor %}
 {% endblock %}
