@@ -12,7 +12,7 @@ from data.obtaining import ObtainingMethod
 
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = 'asd130298sF130298sFew19998donohwthvyacheslav'
+app.config['SECRET_KEY'] = 'se1cr4et'
 run_with_ngrok(app)
 login_manager = LoginManager()
 login_manager.init_app(app)
